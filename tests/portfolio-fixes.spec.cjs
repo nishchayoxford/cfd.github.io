@@ -74,7 +74,11 @@ for (const width of [1440, 390]) {
       const box = await video.boundingBox();
       for (const cue of nativeCues) {
         const { object } = await client.send('DOM.resolveNode', { backendNodeId: cue.backendNodeId });
-        const { result } = await client.send('Runtime.callFunctionOn', { objectId: object.objectId, functionDeclaration: 'function() { const b=this.getBoundingClientRect(); return {left:b.left,right:b.right,top:b.top,bottom:b.bottom}; }', returnByValue: true });
+        // Chromium 153 reports an inline cue rect beyond its native visible line box.
+        // The native display block has stable bounds in both 153 and 154. Keep horizontal
+        // bounds to catch truncated long cues, and use the display block for vertical safety.
+        const { result } = await client.send('Runtime.callFunctionOn', { objectId: object.objectId, functionDeclaration: 'function() { const b=this.getBoundingClientRect(), line=this.parentElement.getBoundingClientRect(); return {left:b.left,right:b.right,top:line.top,bottom:line.bottom,container:this.parentElement.getAttribute("pseudo")}; }', returnByValue: true });
+        expect(result.value.container).toBe('-webkit-media-text-track-display');
         expect(result.value.left).toBeGreaterThanOrEqual(box.x);
         expect(result.value.right).toBeLessThanOrEqual(box.x + box.width);
         expect(result.value.top).toBeGreaterThanOrEqual(box.y);
