@@ -1,0 +1,13 @@
+Copyright and asset notices
+==========================
+
+Manrope is Copyright 2018 The Manrope Project Authors
+(https://github.com/googlefonts/manrope). Instrument Serif is Copyright 2022
+The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif).
+Both are distributed under the SIL Open Font License, Version 1.1.
+The full license and copyright notices accompany each font in assets/fonts/.
+Font binaries were obtained from https://github.com/google/fonts.
+
+The abstract flow illustration is decorative artwork, not numerical simulation
+output, experimental evidence or a diagram to scale. No unpublished research
+figures, thesis files or datasets are distributed with this website.
