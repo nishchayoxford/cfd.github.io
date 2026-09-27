@@ -1,13 +1,25 @@
 Copyright and asset notices
 ==========================
 
-Manrope is Copyright 2018 The Manrope Project Authors
-(https://github.com/googlefonts/manrope). Instrument Serif is Copyright 2022
-The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif).
-Both are distributed under the SIL Open Font License, Version 1.1.
-The full license and copyright notices accompany each font in assets/fonts/.
-Font binaries were obtained from https://github.com/google/fonts.
+Template
+--------
+Adapted from v4 by Erwin Lejeune (https://github.com/guilyx/v4).
+MIT licence and copyright notice are retained in LICENSE.
+The author's biography, projects, portrait, blog, photographs and videos are
+not included in the public build.
 
-The abstract flow illustration is decorative artwork, not numerical simulation
-output, experimental evidence or a diagram to scale. No unpublished research
-figures, thesis files or datasets are distributed with this website.
+Typography
+----------
+Inter Variable, Space Grotesk Variable and JetBrains Mono are self-hosted
+through Fontsource packages. SIL Open Font License notices accompany the
+published site under public/licenses/. Package versions are pinned in
+package-lock.json.
+
+Scientific media
+----------------
+The films and posters are newly generated portfolio demonstrations.
+The optimisation film uses the public capstone query history; fitted surfaces
+are labelled as models rather than true objective functions.
+The flow film is an independent numerical demonstration, not an unpublished
+research result. Reproduction packages document numerical methods and limits.
+No thesis figures, thesis footage or private research datasets are distributed.

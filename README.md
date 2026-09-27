@@ -1,54 +1,68 @@
-# Nishchay Tiwari — Research Portfolio
+# Nishchay Tiwari — Computational Portfolio
 
-**Live site:** https://nishchayoxford.github.io/cfd.github.io/
+An Astro portfolio for computational science, Python and machine learning, adapted from the supplied [v4 template](https://github.com/guilyx/v4).
 
-A static, responsive research portfolio about computational fluid dynamics, coastal scour, multiphase flow and aerodynamics. Plain HTML, CSS and JavaScript; no runtime libraries, analytics, remote fonts or build step.
+The design retains the template’s ink/periwinkle palette, typography, alternating media spotlights and interactive career trajectory. Content and media are specific to this portfolio; the original author's personal material is not redistributed.
 
-## Edit the site
+## Local preview
 
-- `index.html`: biography, research, publication records, experience and contact details.
-- `style.css`: responsive layout, visual tokens and print styles.
-- `script.js`: progressively enhanced mobile navigation and publication filters.
-- `assets/`: locally hosted fonts, favicon and social-sharing image. Font licences are included.
-
-All research content is rendered in HTML and remains available with JavaScript disabled. The abstract flow illustration is decorative, not simulation data. Journal articles link to DOIs; presentations and the master's thesis link to their programme, event or institutional records. Do not commit private CVs, contact phone numbers, unpublished thesis material or research datasets.
-
-To add a publication, copy one `.publication` article in `index.html` and set `data-kind` to `journal`, `conference` or `thesis`. The filter totals update automatically. Preserve author order, exact title, publication year, publication type and a verified source URL. The tests intentionally assert the current bibliography; update those expectations when records are added or removed.
-
-## Preview
-
-```sh
-python3 -m http.server 4173 --bind 127.0.0.1
-```
-
-Open http://127.0.0.1:4173/. Directly opening `index.html` also works.
-
-## Browser and accessibility checks
-
-Requires Node.js 24 and Python 3:
+Requires Node.js 22.19.0 or newer, matching the locked dependency graph (Node.js 24 is used in CI).
 
 ```sh
 npm ci
+npm run build
+npm run preview -- --host 127.0.0.1 --port 4323
+```
+
+Open **http://127.0.0.1:4323/cfd.github.io/**. The project base is intentional: the production site lives under a GitHub Pages repository path.
+
+For editing: `npm run dev`. Follow the URL printed by Astro, including `/cfd.github.io/`.
+
+## Structure
+
+- `src/data/site.ts` — biography, contact, experience, education and capabilities.
+- `src/data/publications.json` — publication titles, authors, dates and verified DOI metadata.
+- `src/components/` — hero, project films, background, timeline and publications.
+- `src/pages/work/` — the optimisation and numerical-flow case studies.
+- `src/pages/resume.astro` — public-safe résumé with print-to-PDF support.
+- `src/styles/global.css` — supplied v4 base design tokens and components.
+- `src/styles/portfolio.css` — portfolio composition, responsive behaviour and print treatment.
+- `public/media/` — original demonstration films, posters and descriptions.
+- `public/downloads/` — reproducible demonstration packages.
+- `tests/portfolio*.spec.cjs` — production-build browser and accessibility tests.
+
+## Verification
+
+```sh
+npm run check
+npm run build
 npx playwright install chromium
 npm test
+npm audit --audit-level=moderate
 ```
 
-Or use an installed Chromium-compatible browser:
+An installed Chrome can be used instead:
 
 ```sh
-PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/path/to/chrome npm test
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome npm test
 ```
 
-The suite checks mobile keyboard navigation, publication filters and totals, no-JavaScript content, responsive overflow, local links/assets, metadata, automated WCAG checks, reduced motion and print output. Automated accessibility checks supplement, rather than replace, manual keyboard and visual review.
+Tests run under the actual `/cfd.github.io/` base, not a root-only development shortcut. They cover keyboard interaction, no-JavaScript access, responsive layout, automated WCAG checks, print, media and local paths. Automated checks complement visual review.
 
-Regenerate the social-sharing image after a visual change:
+## Content and media boundaries
 
-```sh
-npm run render:social
-```
+The capstone is an educational project; the numerical-flow study is an independent portfolio demonstration. Neither should be described as a validated engineering product or an industrial deployment. Media documentation identifies the calculation, data and visual transformations behind each film.
 
-## Publishing
+The public site does not include private CV files, phone numbers, home addresses, unpublished doctoral results or original-template personal assets. Supplied reference folders are ignored by Git and are not copied to `dist/`.
 
-GitHub Pages serves the root of `main` at the existing project URL. `_config.yml` excludes development files from the Jekyll output. The Website checks workflow runs on pull requests and pushes to main. Use a pull request, wait for the checks, then merge; verify the Pages deployment and live URL after publishing.
+## Deployment
 
-Keep asset paths relative so the site works under `/cfd.github.io/`. The canonical and social-image URLs must be updated together if the site moves. The copyright year and career status are deliberately editorial rather than inferred from the visitor's clock.
+The replacement is reviewed locally before release. The existing live URL is https://nishchayoxford.github.io/cfd.github.io/.
+
+For an approved release, use the Pages build workflow and configure the repository's Pages source as **GitHub Actions**. Only the built `dist/` artifact is published. Do not publish the repository root: it contains tooling rather than a ready-to-serve site. The deployment workflow runs on `main` only, after its own build and browser checks.
+
+Keep all local links routed through `src/lib/paths.ts`. The canonical URL, social image, sitemap and base path must change together if the site moves.
+
+## Attribution
+
+Original v4 template: Erwin Lejeune, MIT licence retained in `LICENSE`. Fonts are self-hosted through Fontsource; font licence notices are included under `public/licenses/`. See `ASSETS.txt` for media provenance and licences.

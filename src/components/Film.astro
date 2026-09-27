@@ -1,0 +1,61 @@
+---
+import { local } from '@/lib/paths';
+interface Props { name: string; title: string; description: string; large?: boolean; }
+const {name, title, description, large = false} = Astro.props;
+---
+<figure class:list={['film', { 'film-large': large }]}>
+  <div class="film-bar"><span class="film-dot" aria-hidden="true"></span><span>{title}</span><span class="film-format">1080p / scientific film</span></div>
+  <div class="film-stage">
+  <video controls playsinline preload="none" poster={local(`media/${name}-poster.webp`)} aria-label={title} aria-describedby={`${name}-description`} width="1920" height="1080">
+    <source src={local(`media/${name}-film.mp4`)} type="video/mp4" />
+    <track kind="captions" srclang="en" label="English descriptions" src={local(`media/${name}.vtt`)} />
+    <p><a href={local(`media/${name}-film.mp4`)}>Download the film</a></p>
+  </video>
+  <button class="film-play" type="button" aria-label={`Play ${title}`} hidden><span aria-hidden="true">▶</span> Play film</button>
+  </div>
+  <p class="film-error" role="status" hidden>Playback is unavailable. <a href={local(`media/${name}-film.mp4`)}>Open the MP4 directly ↗</a></p>
+  <figcaption id={`${name}-description`}>{description}</figcaption>
+</figure>
+<script>
+  // Native controls remain available without JavaScript. Enhanced posters load on demand.
+  const films = Array.from(document.querySelectorAll<HTMLVideoElement>('.film video'));
+  const allVideos = Array.from(document.querySelectorAll<HTMLVideoElement>('video'));
+  const visibility = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (!entry.isIntersecting) (entry.target as HTMLVideoElement).pause(); });
+  });
+  films.forEach(video => {
+    visibility.observe(video);
+    const figure = video.closest('.film')!;
+    const button = figure.querySelector<HTMLButtonElement>('.film-play')!;
+    const message = figure.querySelector<HTMLElement>('.film-error')!;
+    video.controls = false;
+    button.hidden = false;
+    let attempt = 0;
+    const unavailable = () => {
+      // A failed <source> need not reject play(); settle it and restore a retry.
+      video.pause();
+      video.controls = false;
+      message.hidden = false;
+      button.textContent = 'Retry film';
+      button.setAttribute('aria-label', `Retry ${video.getAttribute('aria-label')}`);
+      button.hidden = false;
+    };
+    button.addEventListener('click', async () => {
+      const currentAttempt = ++attempt;
+      const retry = !message.hidden;
+      message.hidden = true;
+      video.controls = true;
+      button.hidden = true;
+      video.tabIndex = 0;
+      if (retry) video.load();
+      try { await video.play(); video.focus({preventScroll:true}); }
+      catch (error) {
+        if (currentAttempt === attempt && !(error instanceof DOMException && error.name === 'AbortError')) unavailable();
+      }
+    });
+    video.addEventListener('play', () => allVideos.forEach(other => { if (other !== video) other.pause(); }));
+    video.addEventListener('error', unavailable);
+    video.querySelectorAll('source').forEach(source => source.addEventListener('error', unavailable));
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) allVideos.forEach(video => video.pause()); });
+</script>

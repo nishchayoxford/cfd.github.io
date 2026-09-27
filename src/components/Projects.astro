@@ -1,0 +1,36 @@
+---
+import Section from '@/components/Section.astro';
+import Film from '@/components/Film.astro';
+import Icon from '@/components/Icon.astro';
+import { local } from '@/lib/paths';
+---
+<Section id="projects" title="Experiments. Models. Evidence." class="work-section">
+  <p class="section-intro" data-reveal>Two ways of approaching a difficult system: describe its physics, or learn from what it reveals. Here is the work behind both.</p>
+  <ol class="featured-projects">
+    <li class="project-spotlight" data-reveal>
+      <div class="project-media"><Film name="optimisation" title="Black-box optimisation — the search process" description="New visualisation of the capstone’s recorded observations and modelling approach." /></div>
+      <div class="project-copy">
+        <p class="eyebrow">01 / Machine learning & AI</p>
+        <h3>Black-box optimisation</h3>
+        <p class="project-subtitle">Learning where to look next.</p>
+        <div class="project-description"><p>Eight unknown objective functions. A limited evaluation budget. I built a Python workflow that moved from exploratory queries to Gaussian-process surrogates, acquisition functions and controlled local search.</p></div>
+        <ul class="project-tech"><li>Python</li><li>scikit-learn</li><li>Gaussian processes</li><li>Bayesian optimisation</li></ul>
+        <div class="project-links"><a class="text-link" href={local('work/black-box-optimisation/')} aria-label="Read the optimisation case study">Read case study <Icon name="arrow" size={16} /></a><a href="https://github.com/nishchayoxford/bbo-capstone-imperial" class="icon-link" aria-label="Capstone source on GitHub"><Icon name="github" size={20}/></a></div>
+        <p class="project-context">Imperial College London AI / ML capstone</p>
+      </div>
+    </li>
+    <li class="project-spotlight project-reverse" data-reveal>
+      <div class="project-media"><Film name="flow" title="A computational flow experiment" description="A new standalone numerical demonstration, separate from my doctoral research." /></div>
+      <div class="project-copy">
+        <p class="eyebrow">02 / Numerical modelling</p>
+        <h3>Fluid dynamics, made visible</h3>
+        <p class="project-subtitle">From equations to emergent structure.</p>
+        <div class="project-description"><p>A self-contained flow experiment created for this portfolio. Computation and scientific visualisation reveal how an evolving flow develops coherent structures — with the numerical method and reproduction steps available to inspect.</p></div>
+        <ul class="project-tech"><li>Python</li><li>Numerical methods</li><li>Scientific visualisation</li></ul>
+        <div class="project-links"><a class="text-link" href={local('work/flow-lab/')} aria-label="Read the flow experiment">Explore the experiment <Icon name="arrow" size={16}/></a></div>
+        <p class="project-context">Independent portfolio demonstration</p>
+      </div>
+    </li>
+  </ol>
+  <div class="research-bridge" data-reveal><div><span class="eyebrow">Beyond the demonstrations</span><h3>Research tested against the real world.</h3><p>My professional work spans multiphase flow, turbulent aerodynamics and laboratory validation. The published record connects these methods to physical problems.</p></div><a class="text-link" href={local('#publications')}>View publications <Icon name="arrow" size={18}/></a></div>
+</Section>

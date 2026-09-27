@@ -1,0 +1,9 @@
+---
+import Icon from '@/components/Icon.astro';
+import { site } from '@/data/site';
+---
+<footer class="site-footer">
+  <p>{site.name}<span>Computational science & intelligent models</span></p>
+  <div class="social-links">{site.socials.map(s => <a href={s.url} aria-label={s.label} title={s.label}><Icon name={s.icon} size={20} /></a>)}</div>
+  <a class="template-credit" href="https://github.com/guilyx/v4">Adapted from the v4 template</a>
+</footer>

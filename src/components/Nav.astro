@@ -1,0 +1,33 @@
+---
+import { nav } from '@/data/site';
+import { local } from '@/lib/paths';
+---
+<header class="site-header">
+  <nav class="primary-nav" aria-label="Primary">
+    <a href={local()} class="wordmark" aria-label="Nishchay Tiwari home"><span class="monogram">n<span>.</span>t</span><span class="wordmark-label">nishchay tiwari</span></a>
+    <ol class="desktop-nav">
+      {nav.map(item => <li><a href={local(`#${item.id}`)}>{item.label}</a></li>)}
+      <li><a class="btn resume-link" href={local('resume/')}>résumé <span aria-hidden="true">↗</span></a></li>
+    </ol>
+    <details class="mobile-nav" id="mobile-nav">
+      <summary aria-controls="mobile-links" aria-expanded="false">Menu <span aria-hidden="true">☰</span></summary>
+      <ol id="mobile-links">
+        {nav.map(item => <li><a href={local(`#${item.id}`)}>{item.label}</a></li>)}
+        <li><a href={local('resume/')}>résumé ↗</a></li>
+      </ol>
+    </details>
+  </nav>
+</header>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('#mobile-nav');
+  const summary = menu?.querySelector('summary');
+  menu?.addEventListener('toggle', () => summary?.setAttribute('aria-expanded', String(menu.open)));
+  menu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { menu.open = false; }));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && menu?.open) { menu.open = false; summary?.focus(); }
+  });
+  document.addEventListener('click', event => {
+    if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+  });
+  matchMedia('(min-width: 900px)').addEventListener('change', event => { if (event.matches && menu) menu.open = false; });
+</script>

@@ -2,7 +2,7 @@ name: Website checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'feat/**']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -13,7 +13,7 @@ permissions:
 jobs:
   browser-checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,5 +21,14 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run check
+      - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm test -- --workers=2
+      - run: npm audit --audit-level=moderate
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-evidence
+          path: test-results/
+          retention-days: 7

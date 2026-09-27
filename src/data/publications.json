@@ -1,0 +1,143 @@
+[
+  {
+    "title": "Numerical prediction of local scour around marine structures using an Eulerian three-phase model",
+    "authors": [
+      "Nishchay Tiwari",
+      "Michiel AF Knaapen",
+      "Sina Haeri",
+      "Richard JS Whitehouse"
+    ],
+    "doi": "10.1680/jmaen.26.00007",
+    "type": "journal-article",
+    "year": [
+      [
+        2026,
+        7,
+        15
+      ]
+    ],
+    "published_online": [
+      [
+        2026,
+        7,
+        15
+      ]
+    ],
+    "published_print": null,
+    "venue": [
+      "Maritime Engineering"
+    ],
+    "volume": null,
+    "issue": null,
+    "pages_or_article": "1-11",
+    "source": "https://api.crossref.org/works/10.1680/jmaen.26.00007"
+  },
+  {
+    "title": "Numerical Modelling for Scour Near Cofferdams Using Eulerian Two-Phase Flow Model",
+    "authors": [
+      "Nishchay Tiwari",
+      "Michiel Knaapen",
+      "Sina Haeri",
+      "Richard Whitehouse"
+    ],
+    "doi": "10.1007/978-3-032-15477-4_90",
+    "type": "book-chapter",
+    "year": [
+      [
+        2026
+      ]
+    ],
+    "published_online": [
+      [
+        2026,
+        3,
+        17
+      ]
+    ],
+    "published_print": [
+      [
+        2026
+      ]
+    ],
+    "venue": [
+      "Coastal Research Library",
+      "Coastal Dynamics 2025"
+    ],
+    "volume": null,
+    "issue": null,
+    "pages_or_article": "600-606",
+    "source": "https://api.crossref.org/works/10.1007/978-3-032-15477-4_90"
+  },
+  {
+    "title": "Large eddy simulation of the flow around a high-rise building with special focus on the two-points two-times second order statistics of the velocity field",
+    "authors": [
+      "Mohanad Elagamy",
+      "Nishchay Tiwari",
+      "Cristobal Gallego-Castillo",
+      "Alvaro Cuerva-Tejero",
+      "Oscar Lopez-Garcia",
+      "Sergio Avila-Sanchez"
+    ],
+    "doi": "10.1016/j.jweia.2024.105914",
+    "type": "journal-article",
+    "year": [
+      [
+        2024,
+        11
+      ]
+    ],
+    "published_online": null,
+    "published_print": [
+      [
+        2024,
+        11
+      ]
+    ],
+    "venue": [
+      "Journal of Wind Engineering and Industrial Aerodynamics"
+    ],
+    "volume": "254",
+    "issue": null,
+    "pages_or_article": "105914",
+    "source": "https://api.crossref.org/works/10.1016/j.jweia.2024.105914"
+  },
+  {
+    "title": "Comparison of flow structures for vane and rod type vortex generators on a wind turbine airfoil",
+    "authors": [
+      "Nishchay Tiwari",
+      "Pawel Flaszynski",
+      "Thanushree Suresh",
+      "Oskar Szulc"
+    ],
+    "doi": "10.1108/hff-09-2022-0564",
+    "type": "journal-article",
+    "year": [
+      [
+        2023,
+        1,
+        20
+      ]
+    ],
+    "published_online": [
+      [
+        2023,
+        1,
+        20
+      ]
+    ],
+    "published_print": [
+      [
+        2023,
+        4,
+        24
+      ]
+    ],
+    "venue": [
+      "International Journal of Numerical Methods for Heat & Fluid Flow"
+    ],
+    "volume": "33",
+    "issue": "4",
+    "pages_or_article": "1458-1474",
+    "source": "https://api.crossref.org/works/10.1108/HFF-09-2022-0564"
+  }
+]

@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — "Ink & Iris": neutral-cool ink under a periwinkle accent.
+   Defined in guilyx/branding; keep the two in sync.
+
+   The grounds were lifted a step in 2026-08 — the original #0d0e12 read as
+   flat black on OLED phones, where the raised surfaces and hairlines
+   disappeared into the background entirely. Same hue family, more air.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #12141b;
+  --color-bg-raised: #1a1d26;
+  --color-surface: #1a1d26;
+  --color-line: #2c3040;
+  --color-heading: #e8eaf0;
+  --color-body: #aeb3c2;
+  --color-muted: #858b9c;
+  --color-faint: #616779;
+  --color-accent: #8b95f0;
+  --color-accent-soft: rgba(139, 149, 240, 0.08);
+  /* colour of the hero flock; read by the canvas so palettes swap cleanly */
+  --color-agent: #858b9c;
+
+  --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  --ease-swift: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  /* Every size on the site is rem-based, so the root size is the one dial
+     that scales type and spacing together. It has to be responsive: a flat
+     120% is comfortable on a laptop and enormous on a phone, where it cost
+     roughly a fifth of the usable line length. */
+  font-size: 100%;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 110%;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 120%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  @apply bg-bg text-body font-sans antialiased;
+  font-size: 1rem;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: rgba(139, 149, 240, 0.25);
+  color: var(--color-heading);
+}
+
+h1, h2, h3, h4 {
+  @apply font-display text-heading;
+  letter-spacing: -0.02em;
+}
+
+/* Accessible focus */
+:focus-visible {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Reusable pieces
+--------------------------------------------------------------------------- */
+
+/* Underline-slide link used for inline links */
+.link {
+  @apply text-accent relative inline-block;
+  text-decoration: none;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--ease-swift);
+}
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Ghost button */
+.btn {
+  @apply font-mono text-sm text-accent inline-block rounded-sm border border-accent px-6 py-3;
+  background: transparent;
+  transition:
+    background-color 0.25s var(--ease-swift),
+    transform 0.25s var(--ease-swift),
+    box-shadow 0.25s var(--ease-swift);
+}
+.btn:hover,
+.btn:focus-visible {
+  background-color: var(--color-accent-soft);
+}
+
+/* Mono tag chip */
+.chip {
+  @apply font-mono text-muted;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal — elements with [data-reveal] fade/rise in when they enter
+   the viewport. JS adds .is-visible; no-JS users see everything (default
+   hidden state only applies when html.has-js is set).
+--------------------------------------------------------------------------- */
+html.has-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s var(--ease-swift),
+    transform 0.6s var(--ease-swift);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.has-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.has-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Prose styling for blog posts (kept intentionally light — no plugin)
+--------------------------------------------------------------------------- */
+.prose {
+  @apply text-body;
+  max-width: 65ch;
+}
+.prose h2 {
+  @apply mt-12 mb-4 text-2xl;
+}
+.prose h3 {
+  @apply mt-8 mb-3 text-xl;
+}
+.prose p {
+  @apply my-4;
+}
+.prose ul,
+.prose ol {
+  @apply my-4 pl-6;
+}
+.prose ul {
+  list-style: none;
+}
+.prose ul li::before {
+  content: "▸";
+  color: var(--color-accent);
+  display: inline-block;
+  width: 1.2em;
+  margin-left: -1.2em;
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li {
+  @apply my-1.5;
+}
+.prose a {
+  @apply text-accent;
+}
+.prose a:hover {
+  text-decoration: underline;
+}
+.prose blockquote {
+  @apply border-l-2 border-accent pl-4 text-muted italic my-6;
+}
+.prose code {
+  @apply font-mono text-[0.88em] text-heading;
+  background: var(--color-surface);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+.prose pre {
+  @apply my-6 rounded-lg border border-line p-5 overflow-x-auto text-sm;
+  background: var(--color-bg-raised) !important;
+}
+.prose pre code {
+  background: transparent;
+  padding: 0;
+}
+.prose hr {
+  @apply border-line my-10;
+}
+.prose img {
+  @apply rounded-lg my-6;
+  max-width: 100%;
+}
+.prose video {
+  @apply rounded-lg my-6 border border-line;
+  max-width: 100%;
+}
+.prose figure {
+  @apply my-6;
+}
+.prose figcaption {
+  @apply font-mono text-faint mt-2 text-xs;
+}
