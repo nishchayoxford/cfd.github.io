@@ -1,0 +1,12 @@
+# GitHub Pages builds the static site from main. Keep development files out of the published output.
+exclude:
+  - README.md
+  - ASSETS.txt
+  - package.json
+  - package-lock.json
+  - playwright.config.cjs
+  - node_modules
+  - test-results
+  - playwright-report
+  - tests
+  - tools
