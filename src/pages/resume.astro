@@ -1,0 +1,22 @@
+---
+import Base from '@/layouts/Base.astro';
+import { site, experience, education, expertise } from '@/data/site';
+import publications from '@/data/publications.json';
+import { local } from '@/lib/paths';
+---
+<Base title="Résumé">
+  <div class="resume-toolbar"><a class="back-link" href={local()}>← Back to portfolio</a><button type="button" class="btn" id="print-resume" hidden>Print / save PDF</button></div>
+  <article class="resume-document">
+    <header><p class="eyebrow">Computational science / Python / Machine learning</p><h1>{site.name}</h1><p class="resume-role">Research Scientist · PhD candidate</p><p class="resume-contact">{site.location} · <a href={`mailto:${site.email}`}>{site.email}</a> · <a href={site.socials[0].url}>GitHub</a> · <a href={site.socials[1].url}>LinkedIn</a></p></header>
+    <section><h2>Profile</h2><p>Computational scientist working across mathematical modelling, scientific computing and data analysis. Experience in multiphase flow, turbulence, aerodynamics and experimental validation, with Python-based machine learning and black-box optimisation.</p></section>
+    <section><h2>Technical toolkit</h2><ul class="resume-skills">{expertise.map(item => <li><strong>{item.title}</strong><span>{item.detail}</span></li>)}</ul></section>
+    <section><h2>Research & industry experience</h2>{experience.map(job => <div class="resume-job"><div class="resume-job-heading"><h3>{job.role}</h3><span>{job.period}</span></div><p class="resume-company">{job.company} · {job.location}</p><ul>{job.bullets.map(b => <li>{b}</li>)}</ul></div>)}</section>
+    <section><h2>Selected machine-learning project</h2><div class="resume-job"><h3>Black-box optimisation</h3><p class="resume-company">Imperial College London AI / ML capstone</p><p>Sequential optimisation of eight unknown objective functions. Implemented Ridge and Gaussian-process surrogate workflows, expected-improvement acquisition and trust-region candidate generation. The final strategy combined GP and gradient-boosting predictions with function-specific search policies.</p><p><a href="https://github.com/nishchayoxford/bbo-capstone-imperial">github.com/nishchayoxford/bbo-capstone-imperial</a></p></div></section>
+    <section><h2>Education</h2>{education.map(item => <div class="resume-job"><div class="resume-job-heading"><h3>{item.degree}</h3><span>{item.period}</span></div><p class="resume-company">{item.institution}</p><p>{item.detail}</p></div>)}</section>
+    <section><h2>Selected publications</h2><ol class="resume-publications">{publications.map(p => <li><p>{p.authors.join(', ')} ({p.year[0][0]}). <a href={`https://doi.org/${p.doi}`}>{p.title}.</a> <em>{p.venue.join(' · ')}</em>{p.volume ? `, ${p.volume}` : ''}, {p.pages_or_article}. {p.type==='book-chapter'?'Proceedings chapter.':''}</p><span>doi.org/{p.doi}</span></li>)}</ol></section>
+  </article>
+</Base>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('#print-resume');
+  if (button) { button.hidden = false; button.addEventListener('click', () => window.print()); }
+</script>

@@ -1,0 +1,57 @@
+---
+import Section from '@/components/Section.astro';
+import { experience, education } from '@/data/site';
+const start = new Date('2019-01-01T00:00:00Z').getTime();
+const end = Date.now();
+const position = (iso: string | null) => ((iso ? new Date(`${iso}-01T00:00:00Z`).getTime() : end) - start) / (end - start) * 100;
+const ticks = [2019,2021,2023,2025];
+---
+<Section id="experience" title="A trajectory through complex systems.">
+  <p class="section-intro" data-reveal>Coastal engineering, wind energy and measurement science. Research across industry and academia, with computation as the common thread.</p>
+  <div class="experience-layout" data-reveal>
+    <div class="trajectory" aria-label="Research career timeline">
+      <div class="trajectory-axis" aria-hidden="true"><span></span><div>{ticks.map(t => <span style={`left:${position(`${t}-01`)}%`}>{t}</span>)}<span class="axis-present">now</span></div></div>
+      <div class="timeline-tabs" role="tablist" aria-label="Research appointments" aria-orientation="vertical">
+        {experience.map((job,i) => <button class="timeline-tab" role="tab" id={`role-tab-${i}`} aria-controls={`role-panel-${i}`} aria-selected={i===0?'true':'false'} tabindex={i===0?0:-1} aria-label={`${job.role} at ${job.company}`}><span class="timeline-label">{job.shortName}</span><span class="timeline-track"><span class="timeline-bar" style={`left:${position(job.start)}%;width:${Math.max(position(job.end)-position(job.start),1.8)}%`}></span></span></button>)}
+      </div>
+      <p class="timeline-hint">Select an appointment to explore the work.</p>
+    </div>
+    <div class="role-panels">{experience.map((job,i) => <section class="role-panel" id={`role-panel-${i}`} aria-labelledby={`role-heading-${i}`}><p class="eyebrow">{job.period} / {job.location}</p><h3 id={`role-heading-${i}`}>{job.role}</h3><a class="role-company" href={job.url}>{job.company} ↗</a><ul>{job.bullets.map(bullet => <li>{bullet}</li>)}</ul></section>)}</div>
+  </div>
+  <div id="education" class="education"><h3 class="eyebrow">Education</h3><ol>{education.map(item => <li><span>{item.period}</span><div><h4>{item.degree}</h4><p>{item.institution}</p><small>{item.detail}</small></div></li>)}</ol></div>
+</Section>
+<script>
+  const layout = document.querySelector<HTMLElement>('.experience-layout');
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.timeline-tab'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('.role-panel'));
+  function select(index: number, focus = false) {
+    tabs.forEach((tab, i) => {
+      tab.setAttribute('aria-selected', String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
+    });
+    panels.forEach((panel, i) => {
+      panel.hidden = i !== index;
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', `role-tab-${i}`);
+      panel.tabIndex = 0;
+    });
+    if (focus) tabs[index]?.focus();
+  }
+  if (layout && tabs.length === panels.length && tabs.length) {
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', event => {
+        let next = i;
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (i + 1) % tabs.length;
+        else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        select(next, true);
+      });
+    });
+    select(0);
+    layout.classList.add('experience-enhanced');
+  }
+</script>

@@ -1,0 +1,38 @@
+---
+import Base from '@/layouts/Base.astro';
+import Film from '@/components/Film.astro';
+import Outcomes from '@/components/Outcomes.astro';
+import '@/styles/outcomes.css';
+import { local } from '@/lib/paths';
+---
+<Base title="Black-box optimisation" description="A Python AI/ML capstone: Gaussian-process surrogates, Bayesian optimisation and trust-region search under a limited evaluation budget.">
+  <article class="case-study">
+    <header class="case-header">
+      <a class="back-link" href={local('#projects')}>← Back to selected work</a>
+      <p class="eyebrow">Python / Machine learning / Sequential decisions</p>
+      <h1>Learning where<br />to look next.</h1>
+      <p class="case-deck">When you cannot see the objective function, every evaluation is an experiment. This AI / ML capstone follows the search across eight black-box problems.</p>
+      <dl class="case-meta"><div><dt>Context</dt><dd>Imperial College London AI / ML capstone</dd></div><div><dt>Stack</dt><dd>Python · NumPy · scikit-learn</dd></div><div><dt>Approach</dt><dd>Surrogate modelling & Bayesian optimisation</dd></div></dl>
+    </header>
+    <Film name="optimisation" title="Black-box optimisation — the search process" description="A newly rendered visual story of the recorded capstone data. A fitted surface is a model of observations, not the hidden objective itself." large />
+    <Outcomes />
+    <div class="case-columns">
+      <aside class="case-aside"><span class="eyebrow">The question</span><p>Which experiment should come next?</p><a class="text-link" href="https://github.com/nishchayoxford/bbo-capstone-imperial">Explore the capstone repository ↗</a></aside>
+      <div class="case-body">
+        <h2>A policy that evolved with the evidence</h2>
+        <p>The task was to maximise eight unknown functions with a small number of sequential queries. The challenge was not simply to fit a model: it was to decide when to investigate an uncertain region and when to refine a promising one.</p>
+        <ol class="method-sequence">
+          <li><span>01</span><div><h3>Explore before committing</h3><p>The early query history establishes a working picture of each function. The week-five code uses Ridge-regression surrogates for simple, regularised guidance in the small-data regime.</p></div></li>
+          <li><span>02</span><div><h3>Use uncertainty to choose</h3><p>Gaussian-process models and expected improvement introduced a way to weigh potential gains against uncertainty. The policy differed by function rather than assuming one global strategy would suit every landscape.</p></div></li>
+          <li><span>03</span><div><h3>Control the search radius</h3><p>Trust-region-style candidate generation concentrated effort near promising observations. The final policy combined Gaussian-process and gradient-boosting predictions with expected-improvement and upper-confidence-bound scoring for most functions; F1 used a separate incumbent-nearby heuristic.</p></div></li>
+        </ol>
+        <h2>Keep the misses in the record</h2>
+        <p>A useful result is more than the best number. The repository retains query histories, weekly scripts, returned outcomes, a datasheet and a model card. It documents damaging global jumps as well as successful local refinement.</p>
+        <p>These are observed outcomes from a learning project, not evidence of global optimality or a controlled benchmark against competing methods. Small samples and function-specific tuning remain important limits.</p>
+        <details class="reproduction-note"><summary>Reproduction notes</summary><p>The archived input and output histories are internally consistent across all thirteen rounds. A replay of the final script reproduced the submitted F1–F7 inputs, but not F8. That mismatch remains unresolved; the film and chart therefore report the archived returns rather than claiming a complete replay of every decision.</p><p>The film's surface is a new four-dimensional GP fit shown as a two-dimensional mean slice. It is not the hidden objective, the original policy, or an uncertainty surface.</p><a class="text-link" href={local('downloads/optimisation-study.zip')}>Download the film's code & public data ↓</a></details>
+        <div class="case-resources"><a href="https://github.com/nishchayoxford/bbo-capstone-imperial/blob/main/scripts/capstoneweek13.py">Final search policy ↗</a><a href="https://github.com/nishchayoxford/bbo-capstone-imperial/blob/main/docs/MODEL_CARD.md">Model card ↗</a><a href="https://github.com/nishchayoxford/bbo-capstone-imperial/blob/main/docs/DATASHEET.md">Dataset documentation ↗</a></div>
+      </div>
+    </div>
+    <div class="next-project"><span class="eyebrow">Next experiment</span><a href={local('work/flow-lab/')}>Fluid dynamics, made visible <span aria-hidden="true">→</span></a></div>
+  </article>
+</Base>

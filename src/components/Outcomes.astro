@@ -1,0 +1,71 @@
+---
+import data from '@/data/capstone.json';
+import { chart, score } from '@/lib/outcomes';
+const initial = data.functions.find(item => item.id === 'F5')!;
+const plot = chart(initial,13);
+---
+<section class="outcome-explorer" id="outcome-explorer" aria-labelledby="outcome-title">
+  <div class="outcome-heading"><div><p class="eyebrow">Explore the recorded evidence</p><h2 id="outcome-title">Progress is not a straight line.</h2></div><span data-dimensions>4 dimensions</span></div>
+  <p class="outcome-intro"><strong>Worked example: F5.</strong> Its seventh query moved backwards. Keeping the individual returns alongside the incumbent makes both the setback and the recovery visible.</p>
+  <div class="chart-controls" hidden><div><label for="objective-function">Objective function</label><select id="objective-function">{data.functions.map(item => <option value={item.id} selected={item.id==='F5'}>{item.id} · {item.dimensions} dimensions</option>)}</select></div><div class="round-control"><label for="recorded-round">Recorded round <output for="recorded-round" data-round>13 / 13</output></label><input id="recorded-round" type="range" min="1" max="13" value="13" step="1" /></div></div>
+  <div class="outcome-readout" aria-live="polite" aria-atomic="true"><span><span data-function>F5</span> · round <span data-week>13</span></span><span>Returned <strong data-return>{score(initial.observed[12])}</strong></span><span>Best observed <strong data-best>{score(initial.best_so_far[12])}</strong></span></div>
+  <svg class="outcome-chart" viewBox="0 0 800 330" role="img" aria-label="F5 raw observations and best-so-far through round 13">
+    <g class="chart-y-ticks">{plot.ticks.map(tick => <g class="chart-y-tick" transform={`translate(0,${tick.y})`}><line x1="104" x2="774" /><text x="92" text-anchor="end" dominant-baseline="middle">{tick.label}</text></g>)}</g>
+    <g class="chart-x-ticks">{plot.xTicks.map(tick => <text x={tick.x} y="315" text-anchor="middle">{tick.label}</text>)}</g>
+    <path class="incumbent-line" d={plot.steps} />
+    <polyline class="observed-line" points={plot.points} />
+    <g class="observation-dots">{plot.dots.map(dot => <circle cx={dot.x} cy={dot.y} r="4"><title>Round {dot.round}: {score(dot.value)}</title></circle>)}</g>
+  </svg>
+  <div class="chart-legend"><span><i class="legend-observed"></i> Returned score</span><span><i class="legend-best"></i> Best-so-far</span><span>Round →</span></div>
+  <p class="chart-note">Raw scores, not percentages of an optimum. Each function has its own scale. Dots are evaluations; connecting lines only guide the eye. F1 has a near-zero signal.</p>
+  <details class="outcome-table"><summary>Read the values as a table</summary><table><caption>Archived <span data-table-function>F5</span> returns and cumulative maxima</caption><thead><tr><th scope="col">Round</th><th scope="col">Returned score</th><th scope="col">Best-so-far</th></tr></thead><tbody>{initial.observed.map((value,i) => <tr><th scope="row">W{String(i+1).padStart(2,'0')}</th><td>{score(value)}</td><td>{score(initial.best_so_far[i])}</td></tr>)}</tbody></table></details>
+  <a class="text-link chart-source" href="https://github.com/nishchayoxford/bbo-capstone-imperial/blob/main/data/weekly_results/outputs/13.txt">Inspect the source observations ↗</a>
+</section>
+<script>
+  import data from '@/data/capstone.json';
+  import { chart, score } from '@/lib/outcomes';
+  const root = document.querySelector<HTMLElement>('#outcome-explorer');
+  if (root) {
+    const controls = root.querySelector<HTMLElement>('.chart-controls')!;
+    const select = root.querySelector<HTMLSelectElement>('#objective-function')!;
+    const range = root.querySelector<HTMLInputElement>('#recorded-round')!;
+    const svg = root.querySelector<SVGSVGElement>('.outcome-chart')!;
+    const text = (selector:string,value:string) => { root.querySelector(selector)!.textContent=value; };
+    const update = () => {
+      const item = data.functions.find(item => item.id === select.value) || data.functions[4];
+      const plot = chart(item,Number(range.value),svg.getBoundingClientRect().width);
+      svg.setAttribute('viewBox',`0 0 ${plot.width} ${plot.height}`);
+      text('[data-dimensions]',`${item.dimensions} dimensions`);
+      text('[data-round]',`${plot.count} / 13`);
+      text('[data-week]',String(plot.count));
+      text('[data-function]',item.id);
+      text('[data-return]',score(item.observed[plot.count-1]));
+      text('[data-best]',score(item.best_so_far[plot.count-1]));
+      svg.setAttribute('aria-label',`${item.id} raw observations and best-so-far through round ${plot.count}`);
+      svg.querySelector('.incumbent-line')!.setAttribute('d',plot.steps);
+      svg.querySelector('.observed-line')!.setAttribute('points',plot.points);
+      const dots = svg.querySelector('.observation-dots')!;
+      dots.replaceChildren(...plot.dots.map(point => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        circle.setAttribute('cx',String(point.x)); circle.setAttribute('cy',String(point.y)); circle.setAttribute('r','4');
+        const title = document.createElementNS('http://www.w3.org/2000/svg','title'); title.textContent=`Round ${point.round}: ${score(point.value)}`; circle.append(title); return circle;
+      }));
+      svg.querySelectorAll('.chart-y-tick').forEach((tick,i) => { tick.setAttribute('transform',`translate(0,${plot.ticks[i].y})`); tick.querySelector('text')!.textContent=plot.ticks[i].label; tick.querySelector('line')!.setAttribute('x2',String(plot.width-26)); });
+      svg.querySelector('.chart-x-ticks')!.replaceChildren(...plot.xTicks.map(tick => {
+        const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+        label.setAttribute('x',String(tick.x)); label.setAttribute('y',String(plot.height-15)); label.setAttribute('text-anchor','middle'); label.textContent=tick.label; return label;
+      }));
+      text('[data-table-function]',item.id);
+      root.querySelectorAll('tbody tr').forEach((row,i) => { const cells=row.querySelectorAll('td'); cells[0].textContent=score(item.observed[i]); cells[1].textContent=score(item.best_so_far[i]); });
+    };
+    select.addEventListener('change',update);
+    range.addEventListener('input',update);
+    controls.hidden=false;
+    update();
+    // Match SVG units to CSS pixels instead of shrinking the tick typography.
+    let width = svg.getBoundingClientRect().width;
+    new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width !== width) { width=entry.contentRect.width; update(); }
+    }).observe(svg);
+  }
+</script>

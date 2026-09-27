@@ -1,22 +1,23 @@
 const { defineConfig } = require('@playwright/test');
-
+const external = process.env.SITE_TEST_URL;
 module.exports = defineConfig({
   testDir: './tests',
+  testMatch: 'portfolio*.spec.cjs',
   fullyParallel: true,
+  workers: 3,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: external || 'http://127.0.0.1:4323/cfd.github.io/',
     browserName: 'chromium',
     launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
-      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
-      : {},
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {},
     trace: 'retain-on-failure',
   },
-  webServer: {
-    command: 'python3 -m http.server 4173 --bind 127.0.0.1',
-    url: 'http://127.0.0.1:4173',
+  ...(external ? {} : { webServer: {
+    command: 'npm run preview -- --host 127.0.0.1 --port 4323',
+    url: 'http://127.0.0.1:4323/cfd.github.io/',
     reuseExistingServer: !process.env.CI,
-  },
+  }}),
 });

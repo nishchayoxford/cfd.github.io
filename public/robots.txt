@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nishchayoxford.github.io/cfd.github.io/sitemap-index.xml

@@ -1,0 +1,54 @@
+---
+import { site } from '@/data/site';
+import { local } from '@/lib/paths';
+---
+<section class="hero" aria-labelledby="name">
+  <div class="hero-copy">
+    <p class="eyebrow" data-reveal><span class="status-dot" aria-hidden="true"></span> Computational science · Python · AI / ML</p>
+    <h1 id="name" data-reveal>{site.name}</h1>
+    <h2 class="hero-statement" data-reveal><span>Modelling physics.</span><span>Learning from data.</span></h2>
+    <p class="hero-summary" data-reveal>I turn complex systems into numerical experiments — and data into models that help explain them. My work connects fluid dynamics, scientific computing and machine learning.</p>
+    <dl class="hero-spec" data-reveal>
+      <div><dt>currently</dt><dd>Research Scientist · HR Wallingford</dd></div>
+      <div><dt>research</dt><dd>PhD candidate · The Open University</dd></div>
+      <div><dt>toolkit</dt><dd>Python / C++ / OpenFOAM / scikit-learn</dd></div>
+    </dl>
+    <div class="hero-actions" data-reveal><a class="btn" href={local('#projects')}>Explore the work <span aria-hidden="true">↘</span></a><a class="quiet-link" href={site.socials[0].url}>GitHub <span aria-hidden="true">↗</span></a></div>
+  </div>
+  <figure class="hero-visual" aria-label="A computed cylinder wake" data-reveal>
+    <div class="hero-visual-header"><span class="eyebrow">Inside the computation</span><span class="font-mono">01 / FLOW</span></div>
+    <video id="hero-flow" muted playsinline preload="none" width="1920" height="1080" poster={local('media/hero-poster.webp')} data-src={local('media/flow-hero.mp4')} aria-label="Vortices moving downstream in a computed two-dimensional cylinder wake" aria-describedby="hero-flow-caption"></video>
+    <figcaption id="hero-flow-caption" class="hero-visual-note">A cylinder. A flow field. Structure emerging from computation.</figcaption>
+    <div class="hero-film-actions"><a class="text-link" href={local('work/flow-lab/')}>Explore the experiment ↗</a><button id="hero-motion" type="button" aria-controls="hero-flow" hidden>Play motion</button></div>
+  </figure>
+  <div class="hero-bottom"><span>Physics-informed thinking. Data-driven methods.</span><a href={local('#projects')} aria-label="Scroll to selected work">Scroll to explore <span aria-hidden="true">↓</span></a></div>
+</section>
+<script>
+  const video = document.querySelector<HTMLVideoElement>('#hero-flow');
+  const button = document.querySelector<HTMLButtonElement>('#hero-motion');
+  if (video && button) {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const connection = (navigator as Navigator & {connection?: {saveData?: boolean}}).connection;
+    const play = async () => {
+      if (!video.src) video.src = video.dataset.src!;
+      try { await video.play(); } catch { button.textContent = 'Play motion'; }
+    };
+    const label = () => { button.textContent = video.paused ? (video.ended ? 'Replay motion' : 'Play motion') : 'Pause motion'; };
+    button.hidden = false;
+    button.addEventListener('click', () => video.paused ? void play() : video.pause());
+    ['play','pause','ended'].forEach(event => video.addEventListener(event,label));
+    motion.addEventListener('change', () => { if (motion.matches) video.pause(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
+    let firstView = true;
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) video.pause();
+        else if (firstView) {
+          firstView = false;
+          if (!motion.matches && !connection?.saveData && !document.hidden) void play();
+        }
+      }
+    }, {threshold:.5});
+    observer.observe(video);
+  }
+</script>

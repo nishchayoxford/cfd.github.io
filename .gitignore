@@ -2,3 +2,15 @@ node_modules/
 test-results/
 playwright-report/
 .DS_Store
+# Read-only source material. Never publish private documents or copied repos.
+v4-master/
+bbo-capstone-imperial-main/
+Nishchay_Tiwari_GR.pdf
+# Astro and local verification outputs
+dist/
+.astro/
+.env
+.env.*
+__pycache__/
+.venv/
+coverage/
